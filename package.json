@@ -1,0 +1,28 @@
+{
+  "name": "s3-static-site-server",
+  "version": "1.0.0",
+  "description": "Serves static sites matched from a wildcard domain.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/funkybunch/s3-static-site-server.git"
+  },
+  "keywords": [
+    "s3"
+  ],
+  "author": "Mark Adkins <mark@bymark.co> (https://bymark.co)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/funkybunch/s3-static-site-server/issues"
+  },
+  "homepage": "https://github.com/funkybunch/s3-static-site-server#readme",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "minio": "^7.0.16"
+  }
+}
