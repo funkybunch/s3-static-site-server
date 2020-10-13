@@ -21,16 +21,13 @@ function formatFileQuery(path) {
     if(path[path.length-1] === "/") {
         // path is a directory
         // append `index.html`
-        console.log('Type: directory path with trailing slash');
         output = output + 'index.html';
     } else if(!path.split('/')[path.split('/').length-1].includes('.')) {
         // path does not include file extension, assume directory missing trailing slash
         // append `index.html`
-        console.log('Type: directory path without trailing slash');
         output = output + '/index.html';
     } else if(path === '/favicon.ico') {
         // path is favicon
-        console.log('Type: directory path without trailing slash');
         output = 'favicon.ico';
     }
     return output;
@@ -58,17 +55,24 @@ app.get('*', function (req, res) {
     }
     if(!isRoot) {
         S3_Client.bucketExists(bucket, function(error, exists) {
-            if (error) {
+            if(error) {
                 // 400 Site Does Not Exist
                 res.status(500).send('500 Server Configuration Error');
             }
-            if (exists) {
-                S3_Client.getObject(bucket, file, function(error, stream) {
-                    if(error) {
-                        // Page or file does not exist
-                        res.status(404).send('404 Not Found');
+            if(exists) {
+                S3_Client.getBucketPolicy(bucket, function(error, policy) {
+                    if(policy === undefined) {
+                        res.status(403).send('403 Permission Denied.  Site is private.');
+                    } else {
+                        S3_Client.getObject(bucket, file, function(error, stream) {
+                            if(error) {
+                                // Page or file does not exist
+                                res.status(404).send('404 Not Found');
+                            } else {
+                                stream.pipe(res);
+                            }
+                        });
                     }
-                    stream.pipe(res);
                 });
             } else {
                 res.status(400).send('400 Site Does Not Exist');
